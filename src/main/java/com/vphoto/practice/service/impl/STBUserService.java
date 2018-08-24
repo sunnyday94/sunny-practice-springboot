@@ -27,7 +27,7 @@ import java.util.List;
  * @create 2018/8/24
  * @since 1.0.0
  */
-@Service
+@Service("STBUserService")
 @Transactional
 public class STBUserService extends BaseService<STBUser> implements ISTBUserService {
     @Override

@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 /**
  * @description
@@ -41,17 +42,9 @@ import javax.annotation.PostConstruct;
 @Api(tags = {"用户api"})
 public class UserController extends BaseController {
 
-    @Autowired
+    @Resource(name="STBUserService")
     private ISTBUserService userService;
 
-    public UserController(){
-        log.info("执行UserController构造方法");
-    }
-
-    @PostConstruct
-    public void init(){
-        log.info("执行init方法");
-    }
 
     /**
      * @Description: 新增用户
@@ -78,7 +71,7 @@ public class UserController extends BaseController {
     @PostMapping(value="/getUserList",produces = {"application/json"})
     @ApiOperation(value="获取用户列表",notes = "获取用户列表,page中的obj必传",response = ResBean.class)
     @ApiImplicitParams(
-            @ApiImplicitParam(name="page",dataType ="ReqPage<STBUserVo>",required = true, paramType = "body",value="{\"pageIndex\":1,\"pageSize\":10,\"obj\":{\"id\":}}")
+            @ApiImplicitParam(name="page",dataType ="ReqPage<STBUserVo>",required = true, paramType = "body",value="{\"pageIndex\":1,\"pageSize\":10,\"obj\":{\"id\":1}}")
     )
     public ResBean getUserList(ReqPage<STBUserVo> page){
         if(BaseUtils.isNull(page)) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");

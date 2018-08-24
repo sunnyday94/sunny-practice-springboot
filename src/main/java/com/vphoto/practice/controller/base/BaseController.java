@@ -9,6 +9,7 @@
 package com.vphoto.practice.controller.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vphoto.practice.dao.jpa.page.PageInfo;
 import com.vphoto.practice.utils.BaseUtils;
 import com.vphoto.practice.utils.ResBean;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  * @create 2018/8/24
  * @since 1.0.0
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class BaseController {
 
 

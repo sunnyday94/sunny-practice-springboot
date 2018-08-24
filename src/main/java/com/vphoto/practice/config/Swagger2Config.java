@@ -34,8 +34,11 @@ public class Swagger2Config {
         log.info("=================加载Swagger2Config================");
     }
 
-    @Value("${swagger2.package}")
+    @Value("${swagger.basePackage}")
     private String basePackage;
+
+    @Value("${swagger.title}")
+    private String title;
 
     @Bean
     public Docket createRestApi() {
@@ -49,8 +52,8 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("测试用例管理API")
-                .description("测试用例管理API")
+                .title(title)
+                .description("sunny-practice-springboot")
                 .contact(new Contact("sunny", "", "sunny.wang@v.photos"))
                 .version("1.0")
                 .build();

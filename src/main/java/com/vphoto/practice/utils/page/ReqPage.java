@@ -28,15 +28,15 @@ public class ReqPage<T extends Serializable> implements  Serializable {
 
     private Integer pageSize;
 
-    private T ojb;
+    private T obj;
 
 
     public ReqPage() {
     }
 
-    public ReqPage(Integer pageIndex, Integer pageSize, T ojb) {
+    public ReqPage(Integer pageIndex, Integer pageSize, T obj) {
         this.pageIndex = pageIndex;
         this.pageSize = pageSize;
-        this.ojb = ojb;
+        this.obj = obj;
     }
 }

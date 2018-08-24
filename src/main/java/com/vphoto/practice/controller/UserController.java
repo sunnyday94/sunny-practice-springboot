@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,6 +47,15 @@ public class UserController extends BaseController {
     private ISTBUserService userService;
 
 
+    public UserController() {
+        log.info("================加载UserController构造方法==============");
+    }
+
+
+    public @PostConstruct void init(){
+        log.info("============加载init方法===============");
+    }
+
     /**
      * @Description: 新增用户
      * @Author: sunny
@@ -57,7 +67,7 @@ public class UserController extends BaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(dataType="STBUserVo",name="vo",required=true,paramType="body")
     })
-    public ResBean addUser(STBUserVo vo){
+    public ResBean addUser(@RequestBody  STBUserVo vo){
         if(BaseUtils.isNull(vo)) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");
         userService.addUser(vo);
         return this.getResBean("新增用户成功!");
@@ -73,9 +83,9 @@ public class UserController extends BaseController {
     @ApiImplicitParams(
             @ApiImplicitParam(name="page",dataType ="ReqPage<STBUserVo>",required = true, paramType = "body",value="{\"pageIndex\":1,\"pageSize\":10,\"obj\":{\"id\":1}}")
     )
-    public ResBean getUserList(ReqPage<STBUserVo> page){
+    public ResBean getUserList(@RequestBody  ReqPage<STBUserVo> page){
         if(BaseUtils.isNull(page)) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");
-        if(BaseUtils.isNull(page.getOjb())) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");
+        if(BaseUtils.isNull(page.getObj())) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");
         PageInfo pageInfo =  userService.getUserList(page);
         return this.getResBean(pageInfo);
     }
@@ -91,7 +101,7 @@ public class UserController extends BaseController {
     @ApiImplicitParams(
             @ApiImplicitParam(name="vo",dataType = "STBUserVo",required = true,paramType = "body")
     )
-    public ResBean updateUser(STBUserVo vo){
+    public ResBean updateUser(@RequestBody  STBUserVo vo){
         if(BaseUtils.isNull(vo)) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");
         userService.updateUser(vo);
         return this.getResBean("更新用户成功!");
@@ -109,7 +119,7 @@ public class UserController extends BaseController {
     @ApiImplicitParams(
             @ApiImplicitParam(name="vo",dataType = "STBUserVo",required = true,paramType = "body")
     )
-    public ResBean deleteUser(STBUserVo vo){
+    public ResBean deleteUser(@RequestBody  STBUserVo vo){
         if(BaseUtils.isNull(vo)) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");
         userService.deleteUser(vo);
         return this.getResBean("删除用户成功!");

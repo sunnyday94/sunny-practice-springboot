@@ -40,7 +40,7 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
       jdbc-url: jdbc:mysql://39.108.239.226:3306/sunny_springboot?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
-      password: uAiqwVwjJ8-i
+      password: root
       connection-test-query: select 1
       connection-timeout: 60000
       auto-commit: false
@@ -67,5 +67,6 @@ spring:
     timeout: 0 # 连接超时时间（毫秒）
 
 #swagger2
-swagger2:
-  package: com.vphoto.practice.controller
+swagger:
+  basePackage: com.vphoto.practice.controller
+  title: springboot

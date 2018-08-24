@@ -45,12 +45,16 @@ public class STBUserService extends BaseService<STBUser> implements ISTBUserServ
     @Override
     public PageInfo getUserList(ReqPage<STBUserVo> page) {
         CheckUtils.checkNull(page,"obj");
-        STBUserVo vo = page.getOjb();
+        STBUserVo vo = page.getObj();
         StringBuilder hql = new StringBuilder(" from STBUser u where u.delFlag =?");
         List<Object> params = new ArrayList<>();
         if(vo.getDelFlag()==null)
             vo.setDelFlag("0");
         params.add(vo.getDelFlag());
+        if(vo.getId()!=null){
+            hql.append(" and u.id = ?");
+            params.add(vo.getId());
+        }
         if(vo.getUserName()!=null && !vo.getUserName().equals("")){
             hql.append(" and u.userName like ?");
             params.add("%"+vo.getUserName()+"%");

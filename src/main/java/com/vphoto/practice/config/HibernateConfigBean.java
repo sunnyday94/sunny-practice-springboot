@@ -1,5 +1,6 @@
 /**
- * 
+ * @author :sunny
+ * @description: Hibernate配置类
  */
 package com.vphoto.practice.config;
 

@@ -15,6 +15,8 @@ import com.vphoto.practice.service.ISTBUserService;
 import com.vphoto.practice.utils.BaseUtils;
 import com.vphoto.practice.utils.CheckUtils;
 import com.vphoto.practice.utils.DateUtils;
+import com.vphoto.practice.utils.exception.ResultCodeEnum;
+import com.vphoto.practice.utils.exception.VPhotoException;
 import com.vphoto.practice.utils.page.ReqPage;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -33,6 +35,9 @@ public class STBUserService extends BaseService<STBUser> implements ISTBUserServ
     @Override
     public Integer addUser(STBUserVo vo) {
         CheckUtils.checkNull(vo, "userName,userPassword,gender");
+        //校验
+        if(isExisted(vo))
+            throw new VPhotoException(ResultCodeEnum.系统异常,vo.getUserName().concat("已存在!"));
         vo.setCreateTime(DateUtils.getNow());
         vo.setUpdateTime(DateUtils.getNow());
         vo.setDelFlag("0");
@@ -75,6 +80,9 @@ public class STBUserService extends BaseService<STBUser> implements ISTBUserServ
     @Override
     public Integer updateUser(STBUserVo vo) {
         CheckUtils.checkNull(vo, "id");
+        //校验
+        if(isExisted(vo))
+            throw new VPhotoException(ResultCodeEnum.系统异常,vo.getUserName().concat("已存在!"));
         vo.setUpdateTime(DateUtils.getNow());
         STBUser u  = this.getEntity(STBUser.class, vo.getId());
         BaseUtils.copyBeanNullInvalid(vo,u);
@@ -84,6 +92,29 @@ public class STBUserService extends BaseService<STBUser> implements ISTBUserServ
 
     @Override
     public Integer deleteUser(STBUserVo vo) {
+        CheckUtils.checkNull("vo", "id");
+        vo.setDelFlag("1");
+        vo.setDelTime(DateUtils.getNow());
+        STBUser u = this.getEntity(STBUser.class, vo.getId());
+        this.deleteEntity(u);
         return null;
+    }
+
+
+    /**
+      * @Description: 判断是否已存在
+      * @Author: sunny
+      * @Date: 17:57 2018/8/26
+      */
+    private boolean isExisted(STBUserVo vo){
+        List<Object> params = new ArrayList<>();
+        StringBuilder hql  = new StringBuilder("select count(u.id) from STBUser u where u.delFlag='0'");
+        hql.append(" and u.userName=?");
+        params.add(vo.getUserName());
+        if(vo.getId()!=null){
+            hql.append(" and u.id!=?");
+            params.add(vo.getId());
+        }
+       return getTotalObj(hql.toString(), params.toArray())>0 ? true : false;
     }
 }

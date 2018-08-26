@@ -113,7 +113,6 @@ public class UserController extends BaseController {
      * @Author: sunny
      * @Date: 2018/8/24 16:26
      */
-    @Deprecated
     @PostMapping(value="/deleteUser",produces = {"application/json"})
     @ApiOperation(value="删除用户",notes = "删除用户,vo中id必传",response = ResBean.class)
     @ApiImplicitParams(

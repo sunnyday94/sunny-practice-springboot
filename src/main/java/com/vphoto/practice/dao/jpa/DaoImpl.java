@@ -426,14 +426,14 @@ public class DaoImpl<E extends Serializable>
         if (nhql.toUpperCase().indexOf("FROM") != -1) {
             nhql = "select count(*) "
                     + hql.substring(nhql.toUpperCase().indexOf("FROM"));
-            if (page > -1 && pagesize > 0)// 不是分页不再查询总数
-            	//如果有Group by再套层查询
-            	if(nhql.toUpperCase().indexOf("GROUP") != -1) {
-            		
-            		nhql=getHql2Sql(hql);
-            		pageBean.setTotal(PageUtil.getSQLSingleResult(getSession(), nhql, paras));
-            	}else
-            		pageBean.setTotal(PageUtil.getTotalObject(getSession(), nhql, paras));
+            if (page > -1 && pagesize > 0) {// 不是分页不再查询总数
+                //如果有Group by再套层查询
+                if (nhql.toUpperCase().indexOf("GROUP") != -1) {
+                    nhql = getHql2Sql(hql);
+                    pageBean.setTotal(PageUtil.getSQLSingleResult(getSession(), nhql, paras));
+                } else
+                    pageBean.setTotal(PageUtil.getTotalObject(getSession(), nhql, paras));
+            }
         } else
             pageBean.setTotal(0);
 

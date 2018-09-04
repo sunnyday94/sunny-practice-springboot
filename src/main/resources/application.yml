@@ -5,7 +5,7 @@ server:
 
 hibernate:
   packages:
-    scan: com.vphoto.practice.entity
+    scan: com.sunny.practice.entity
   hbm2ddl:
     auto: none
 
@@ -17,7 +17,7 @@ spring:
   jpa:
     database : MYSQL
     properties:
-      packagesToScan: com.vphoto.practice.entity
+      packagesToScan: com.sunny.practice.entity
       hibernate:
         dialect : org.hibernate.dialect.MySQL5Dialect
         show_sql : true
@@ -68,5 +68,5 @@ spring:
 
 #swagger2
 swagger:
-  basePackage: com.vphoto.practice.controller
+  basePackage: com.sunny.practice.controller
   title: springboot

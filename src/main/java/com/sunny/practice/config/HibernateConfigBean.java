@@ -41,7 +41,7 @@ public class HibernateConfigBean {
     @Qualifier("dataSource")
     private DataSource dataSource;
     
-    @Value("${hibernate.packages.scan:com.vphoto.practice.entity}")
+    @Value("${hibernate.packages.scan:com.sunny.practice.entity}")
     private String packagesToScan;
     
     @Value("${hibernate.hbm2ddl.auto:none}")

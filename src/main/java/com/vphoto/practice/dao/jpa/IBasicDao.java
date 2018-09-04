@@ -7,7 +7,7 @@ import java.util.Map;
 import com.vphoto.practice.dao.jpa.page.PageInfo;
 
 /**公共DAO接口
- * @author yangkunguo
+ * @author sunny
  *
  * @param <E>
  */
@@ -104,6 +104,7 @@ public interface IBasicDao<E extends Serializable> {
 	 * @return
 	 */
     List<E> listPage(int page, int pagesize, String hql, Object... paras);
+
 	/** 返回集合  SELECT new com.centerm.TestVO(count(*),name) FROM A;可以map到VO类
 	 * @param clazz 默认对象别名为: m     m.id=? or m.name=?
 	 * @param hqlParameter 如：where id=? and name=?

@@ -1,16 +1,15 @@
 package com.vphoto.practice.dao.jpa;
 
+import org.hibernate.Session;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import com.vphoto.practice.dao.jpa.page.PageInfo;
-import org.hibernate.Session;
 
-
-/**
- * @Description: 公共DAO接口
- * @Author: sunny
- * @Date: 2018/8/24 14:41
+/**公共DAO接口
+ * @author yangkunguo
+ *
+ * @param <E>
  */
 public interface IBasicDao<E extends Serializable> {
 
@@ -58,15 +57,26 @@ public interface IBasicDao<E extends Serializable> {
 	 */
     E loadEntity(Class<E> clazz, Long id);
 	
-	/**分页，返回集合
-	 * @param clazz
+	
+	/** 分页，返回VO集合,不支持sql中带in(?,?,?)
+	 * @param <T>
+	 * @param clazzVO 要转换的VO类
 	 * @param first
 	 * @param max
-	 * @param sqlParameter 如：where id=? and name=?
-	 * @param values 如：values.add(1);values.add("king");
+	 * @param hql
+	 * @param values
+	 * @return 返回VO List
+	 */
+	public <T> PageInfo getPages(Class<T> clazzVO, int first, int max, String hql, Object... values);
+	/**分页，返回VO集合 ,不支持sql中带in(?,?,?)
+	 * @param clazzVO
+	 * @param first
+	 * @param max
+	 * @param hql
+	 * @param pars
 	 * @return
 	 */
-//	public abstract PageInfo getPages(Class<E> clazz,int first, int max, String sqlParameter, Object ... values);
+	public <T> PageInfo getPages(Class<T> clazzVO, int first, int max, String hql, Map<String, Object> pars);
 	
 	/**多表查询分页，返回集合
 	 * @param first
@@ -75,7 +85,7 @@ public interface IBasicDao<E extends Serializable> {
 	 * @param paras 参数数组
 	 * @return
 	 */
-    PageInfo getPages(int first, int max, String hql, Object... paras);
+	PageInfo getPages(int first, int max, String hql, Object... paras);
 	/**针对Hibernate4+的新写法  select a from A a where a=:a
 	 * <BR>Map中的Value可以是数组
 	 * @param first
@@ -84,7 +94,7 @@ public interface IBasicDao<E extends Serializable> {
 	 * @param pars
 	 * @return
 	 */
-    PageInfo getPages(int first, int max, String hql, Map<String, Object> pars);
+	PageInfo getPages(int first, int max, String hql, Map<String, Object> pars);
 //	public abstract PageInfo getPages(Class<E> clazz,int first, int max, String hql, Map<String, Object> pars);
 	/**分页直接返回List
 	 * @param page
@@ -94,7 +104,7 @@ public interface IBasicDao<E extends Serializable> {
 	 * @return
 	 */
     List<E> listPage(int page, int pagesize, String hql, Object... paras);
-	/** 返回集合
+	/** 返回集合  SELECT new com.centerm.TestVO(count(*),name) FROM A;可以map到VO类
 	 * @param clazz 默认对象别名为: m     m.id=? or m.name=?
 	 * @param hqlParameter 如：where id=? and name=?
 	 * @param values 如：1,"king"
@@ -104,11 +114,11 @@ public interface IBasicDao<E extends Serializable> {
 	
 	
 	/** 返回集合
-	 * @param Hql
+	 * @param hql,values
 	 * @param values 如：1,"king"
 	 * @return List
 	 */
-    List<E> entityList(String Hql, Object... values);
+    List<E> entityList(String hql, Object... values);
 	/**针对Hibernate4+的新写法  select a from A a where a=:a
 	 * <BR>Map中的Value可以是数组
 	 * @param hql
@@ -124,9 +134,10 @@ public interface IBasicDao<E extends Serializable> {
 	 * @param s
 	 * @return
 	 */
-//    <T> List<T> entityListSQL(Class<T> t, String sql, Object... s);
+    <T> List<T> entityListSQL(Class<T> t, String sql, Object... s);
     <T> List<T> entityListSQL(Class<T> t, int first, int max, String sql, Object... s);
-	/**执行自定义SQL操作update,delete
+//    public <T> List<T> entityListSQL(Class<T> t,int first,int max, String sql, Map<String, Object> pars);
+    /**执行自定义SQL操作update,delete
 	 * @param sql
 	 * @return
 	 */

@@ -11,7 +11,6 @@
  */
 package com.vphoto.practice.dao.jpa;
 
-import com.vphoto.practice.dao.jpa.page.PageInfo;
 import com.vphoto.practice.utils.json.JsonUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,22 +26,21 @@ import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import java.io.Serializable;
 import java.sql.Connection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
+import java.util.Map.Entry;
+import com.vphoto.practice.dao.jpa.page.PageInfo;
 
 
 /**
- * @Description: 公共DAO层，不能随意添加或修改其中方法
- * @Author: sunny
- * @Date: 2018/8/24 14:41
+ * 公共DAO层，不能随意添加或修改其中方法
+ *
+ * @param <E>
+ * @author yangkunguo
  */
 @Repository("dao")
 @Transactional
@@ -117,6 +115,9 @@ public class DaoImpl<E extends Serializable>
         return getListObject(clazz, -1, -1, sqlParameter, values);
     }
 
+    public <T> List<T> entityListSQL(Class<T> t, String sql, Object... s){
+    	return this.entityListSQL(t, 0, 100, sql, s);
+    }
     /*
      * (non-Javadoc)
      *
@@ -125,8 +126,9 @@ public class DaoImpl<E extends Serializable>
      */
     public <T> List<T> entityListSQL(Class<T> t,int first,int max, String sql, Object... s) {
         log.info(sql + " pars:" + ArrayUtils.toString(s));
-        NativeQuery<?> query = (NativeQuery<?>) getSession().createNativeQuery(sql)
-                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        NativeQuery<?> query = (NativeQuery<?>) getSession().createNativeQuery(sql);
+                query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+//        	query.setResultTransformer(Transformers.aliasToBean(t));
 		if(first>=0 && max>0){
 			query.setFirstResult(first);
 			query.setMaxResults(max);
@@ -136,12 +138,39 @@ public class DaoImpl<E extends Serializable>
                 query.setParameter(i+1, (Object) s[i]);
             }
         }
-//		Stream<?> stream=query.getResultStream();
-//		Object [] objs=stream.toArray();
-//		String json=JsonUtils.toJson(objs);
-//		log.info("---"+query.getResultList());
+
+//        return (List<T>) query.list();
         return JsonUtils.toListObject(query.getResultList(), t);
     }
+    
+//    public <T> List<T> entityListSQL(Class<T> t,int first,int max, String sql, Map<String, Object> pars) {
+//        log.info(sql + " pars:" + ArrayUtils.toString(pars));
+//        NativeQuery<?> query = (NativeQuery<?>) getSession().createNativeQuery(sql);
+//                query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+////        	query.setResultTransformer(Transformers.aliasToBean(t));
+//		
+//		if(pars!=null && !pars.isEmpty()){
+//			for(Entry<String, Object>  ent:pars.entrySet()){
+//				Object obj = ent.getValue();  
+//				//这里考虑传入的参数是什么类型，不同类型使用的方法不同  
+//                if(obj instanceof Collection<?>){  
+//                    query.setParameterList(ent.getKey(), (Collection<?>)obj);  
+//                }else if(obj instanceof Object[]){  
+//                    query.setParameterList(ent.getKey(), (Object[])obj);  
+//                    log.info(ArrayUtils.toString(obj));
+//                }else{  
+//                    query.setParameter(ent.getKey(), obj);  
+//                }  
+//			}
+//			log.info(ArrayUtils.toString(pars)+",first:"+first+",max:"+max);
+//		}
+//		if(first>=0 && max>0){
+//			query.setFirstResult(first);
+//			query.setMaxResults(max);
+//		}
+//
+//        return JsonUtils.toListObject(query.getResultList(), t);
+//    }
 
     public int execSQL(String sql, Object... s) {
         NativeQuery<?> query = getSession().createNativeQuery(sql);
@@ -219,19 +248,19 @@ public class DaoImpl<E extends Serializable>
         }
         return (List<E>) PageUtil.getListObject(getSession(), first, max, querys, values);
     }
-
-
-    @SuppressWarnings({"unchecked", "unused"})
-    private List<E> getListObjectMap(Class<E> clazz, int first, int max,
-                                     String sqlParameter, Map<String, Object> maps) {
-        String querys = "from " + clazz.getSimpleName() + " as m "
-                + (StringUtils.isBlank(sqlParameter) ? "" : sqlParameter);
-        if (sqlParameter != null
-                && sqlParameter.toUpperCase().indexOf("FROM") != -1) {
-            querys = sqlParameter;
-        }
-        return ((List<E>) PageUtil.getListObjectMap(getSession(), first, max, querys, maps));
-    }
+//
+//
+//    @SuppressWarnings({"unchecked", "unused"})
+//    private List<E> getListObjectMap(Class<E> clazz, int first, int max,
+//                                     String sqlParameter, Map<String, Object> maps) {
+//        String querys = "from " + clazz.getSimpleName() + " as m "
+//                + (StringUtils.isBlank(sqlParameter) ? "" : sqlParameter);
+//        if (sqlParameter != null
+//                && sqlParameter.toUpperCase().indexOf("FROM") != -1) {
+//            querys = sqlParameter;
+//        }
+//        return ((List<E>) PageUtil.getListObjectMap(getSession(), first, max, querys, maps));
+//    }
 
 
     /**
@@ -289,31 +318,87 @@ public class DaoImpl<E extends Serializable>
         return PageUtil.getTotalObjectMap(getSession(), hql, values);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see com.sfcs.dao.IDao#getPages(java.lang.Class, int, int,
-     * java.lang.String, java.lang.Object[])
-     */
-	/*public PageInfo getPages(Class<E> clazz, int page, int pagesize,
-			String sqlParameter, Object... values) {
+    
+	/* (non-Javadoc)
+	 * @see com.vphoto.mall.orm.jpa.IBasicDao#getPages(java.lang.Class, int, int, java.lang.String, java.lang.Object[])
+	 */
+	public <T> PageInfo getPages(Class<T> clazzVO, int page, int pageSize,
+			String hql, Object... values) {
 		if (page > 0)
 			page--;
-		int first = page * pagesize;
+		int first = page * pageSize;
 
 		PageInfo pageBean = new PageInfo();
-		pageBean.setList(this.getListObject(clazz, first, pagesize,
-				sqlParameter, values));
+		SessionFactoryImpl sfi = (SessionFactoryImpl)getSession().getSessionFactory();
+		QueryTranslatorImpl queryTranslator = new QueryTranslatorImpl(hql, hql,
+				Collections.EMPTY_MAP, sfi);
+		queryTranslator.compile(Collections.EMPTY_MAP, false);  
+		 // 得到sql
+//		HQLQueryPlan plan = queryParameters.getQueryPlan();
+//		if ( plan == null ) {
+//			plan = getQueryPlan( query, false );
+//		}
+		String sql = queryTranslator.getSQLString();
+		sql=formatSQL(sql);
+		log.info(sql);
+		pageBean.setList(this.entityListSQL(clazzVO, first, pageSize, sql, values));
 		
-		if (page > -1 && pagesize > 0)// 不是分页不再查询总数
-			pageBean.setTotal(this.getTotalObject(clazz, sqlParameter, values));
-		else
+		if (hql.toUpperCase().indexOf("FROM") != -1) {
+            hql = "select count(*) "
+                    + hql.substring(hql.toUpperCase().indexOf("FROM"));
+			if (page > -1 && pageSize > 0) { // 不是分页不再查询总数
+				//如果有Group by再套层查询
+	        	if(hql.toUpperCase().indexOf("GROUP") != -1) {
+	        		String nhql=getHql2Sql(hql);
+	        		pageBean.setTotal(PageUtil.getSQLSingleResult(getSession(), nhql, values));
+	        	}else
+	        		pageBean.setTotal(PageUtil.getTotalObject(getSession(), hql, values));
+			}
+		}else {
 			pageBean.setTotal(0);
-
+		}
 		return pageBean;
-	}*/
+	}
 
-    /*
+	public <T> PageInfo getPages(Class<T> clazzVO,int page, int pageSize, String hql, Map<String, Object> pars) {
+        if (page > 0)
+            page--;
+        int first = page * pageSize;
+
+        PageInfo pageBean = new PageInfo();
+		SessionFactoryImpl sfi = (SessionFactoryImpl)getSession().getSessionFactory();
+		QueryTranslatorImpl queryTranslator = new QueryTranslatorImpl(hql, hql,
+				Collections.EMPTY_MAP, sfi);
+		queryTranslator.compile(Collections.EMPTY_MAP, false);  
+		 // 得到sql
+		String sql = queryTranslator.getSQLString();
+		List<Object> values=chang2List(pars);//new ArrayList<>();
+//		sql=changSQL(sql,pars);
+		sql=formatSQL(sql);
+		pageBean.setList(this.entityListSQL(clazzVO, first, pageSize, sql, values.toArray()));
+        String sqlParameter=hql;
+        
+        if (sqlParameter.toUpperCase().indexOf("FROM") != -1) {
+        	sqlParameter = "select count(*) "
+                    + sqlParameter.substring(sqlParameter.toUpperCase().indexOf("FROM"));
+        	
+            if (page > -1 && pageSize > 0) {// 不是分页不再查询总数
+            	//如果有Group by再套层查询
+            	if(sqlParameter.toUpperCase().indexOf("GROUP") != -1) {
+            		sqlParameter=getHql2Sql(hql);
+            		pageBean.setTotal(PageUtil.getSQLSingleResult(getSession(), sqlParameter, pars.values().toArray()));
+            	}else {
+            		pageBean.setTotal(PageUtil.getTotalObjectMap(getSession(), sqlParameter, pars));
+            	}
+            }
+        } else
+            pageBean.setTotal(0);
+
+        return pageBean;
+    }
+    
+
+	/*
      * (non-Javadoc)
      *
      * @see com.sfcs.dao.IDao#getSession()
@@ -329,7 +414,7 @@ public class DaoImpl<E extends Serializable>
      * java.lang.Object[])
      */
     public PageInfo getPages(int page, int pagesize, String hql,
-                             Object... paras) {
+                                        Object... paras) {
         if (page > 0)
             page--;
         int first = page * pagesize;
@@ -344,19 +429,8 @@ public class DaoImpl<E extends Serializable>
             if (page > -1 && pagesize > 0)// 不是分页不再查询总数
             	//如果有Group by再套层查询
             	if(nhql.toUpperCase().indexOf("GROUP") != -1) {
-            		int index=hql.toUpperCase().indexOf("ORDER BY");
-            		if(index!=-1) {
-            			hql=hql.substring(0, index);
-            		}
-            		SessionFactoryImpl sfi = (SessionFactoryImpl)getSession().getSessionFactory();
-            		QueryTranslatorImpl queryTranslator = new QueryTranslatorImpl(hql, hql,
-            				Collections.EMPTY_MAP, sfi);
-            		queryTranslator.compile(Collections.EMPTY_MAP, false);  
-            		 // 得到sql
-            		String q=queryTranslator.getQueryString();
-            		String sql = queryTranslator.getSQLString();
-            		nhql = "SELECT COUNT(*) FROM ("+sql+") as x";
             		
+            		nhql=getHql2Sql(hql);
             		pageBean.setTotal(PageUtil.getSQLSingleResult(getSession(), nhql, paras));
             	}else
             		pageBean.setTotal(PageUtil.getTotalObject(getSession(), nhql, paras));
@@ -366,6 +440,23 @@ public class DaoImpl<E extends Serializable>
         return pageBean;
     }
 
+    /**
+     * @param hql
+     * @return
+     */
+    private String getHql2Sql(String hql) {
+    	int index=hql.toUpperCase().indexOf("ORDER BY");
+		if(index!=-1) {
+			hql=hql.substring(0, index);
+		}
+		SessionFactoryImpl sfi = (SessionFactoryImpl)getSession().getSessionFactory();
+		QueryTranslatorImpl queryTranslator = new QueryTranslatorImpl(hql, hql,
+				Collections.EMPTY_MAP, sfi);
+		queryTranslator.compile(Collections.EMPTY_MAP, false);  
+		 // 得到sql
+		String sql = queryTranslator.getSQLString();
+		return "SELECT COUNT(*) FROM ("+sql+") as x";
+    }
     @SuppressWarnings("unchecked")
     public List<E> listPage(int page, int pagesize, String hql,
                             Object... paras) {
@@ -400,6 +491,9 @@ public class DaoImpl<E extends Serializable>
         // true).getConnection();
     }
 
+    /* (non-Javadoc)
+     * @see com.vphoto.mall.orm.jpa.IBasicDao#getEntity(java.lang.Class, java.lang.String, java.lang.Object[])
+     */
     public E getEntity(Class<E> clazz, String hql, Object... s) {
         E e;
         Query<?> query = null;
@@ -454,19 +548,7 @@ public class DaoImpl<E extends Serializable>
             if (page > -1 && pagesize > 0) {// 不是分页不再查询总数
             	//如果有Group by再套层查询
             	if(sqlParameter.toUpperCase().indexOf("GROUP") != -1) {
-            		int index=hql.toUpperCase().indexOf("ORDER BY");
-            		if(index!=-1) {
-            			hql=hql.substring(0, index);
-            		}
-            		SessionFactoryImpl sfi = (SessionFactoryImpl)getSession().getSessionFactory();
-            		QueryTranslatorImpl queryTranslator = new QueryTranslatorImpl(hql, hql,
-            				Collections.synchronizedMap(pars), sfi);
-            		queryTranslator.compile(Collections.synchronizedMap(pars), false);  
-            		 // 得到sql
-            		String q=queryTranslator.getQueryString();
-            		String sql = queryTranslator.getSQLString();
-            		sqlParameter = "SELECT COUNT(*) FROM ("+sql+") as x";
-            		
+            		sqlParameter=getHql2Sql(hql);
             		pageBean.setTotal(PageUtil.getSQLSingleResult(getSession(), sqlParameter, pars.values().toArray()));
             	}else {
             		pageBean.setTotal(PageUtil.getTotalObjectMap(getSession(), sqlParameter, pars));
@@ -474,7 +556,6 @@ public class DaoImpl<E extends Serializable>
             }
         } else
             pageBean.setTotal(0);
-//        pageBean.setTotal(PageUtil.getTotalObjectMap(this.getSession(), sqlParameter, pars));
 
         return pageBean;
     }
@@ -500,4 +581,104 @@ public class DaoImpl<E extends Serializable>
         return exec;
     }
 
+    private String changSQL(String sql,Map<String,Object> map) {
+		StringBuilder sqls=new StringBuilder();
+		for(String s :sql.split("in (?)")) {
+			System.out.println(s);
+			if(s.indexOf("(?)")==-1){
+				sqls.append(s);
+			}else {
+				sqls.append(" in (");
+				int length=0;
+				for(Entry<String, Object>  ent:map.entrySet()){
+					Object obj = ent.getValue();  
+					//这里考虑传入的参数是什么类型，不同类型使用的方法不同  
+	                if(obj instanceof Collection<?> ){  
+	                	Collection<?> temps= (Collection<?>) obj;
+	                	length=temps.size();
+	                	map.remove(ent.getKey());
+	                	break;
+	                }else if(obj instanceof Object[]){  
+	                	Object[] temps=(Object[]) obj;
+	                	length=temps.length;
+	                	map.remove(ent.getKey());
+	                	break;
+	                }
+				}
+				StringBuilder temp=new StringBuilder();
+				for(int i=0;i<length;i++) {
+					temp.append("?,");
+				}
+				String sqlt=temp.toString().substring(0, temp.toString().length()-1);
+				sqls.append(sqlt).append(") ");
+				sqls.append(s.replace("(?)", ""));
+			}
+		}
+		
+		System.out.println(sqls.toString());
+		return sqls.toString();
+	}
+    private List<Object> chang2List(Map<String, Object> map) {
+    	List<Object> values=new ArrayList<>();
+    	for(Entry<String, Object>  ent:map.entrySet()){
+			Object obj = ent.getValue();  
+			//这里考虑传入的参数是什么类型，不同类型使用的方法不同  
+            if(obj instanceof Collection<?> ){  
+            	Collection<?> temps= (Collection<?>) obj;
+            	for(Object val:temps)
+            		values.add(val);
+            }else if(obj instanceof Object[]){  
+            	Object[] temps=(Object[]) obj;
+            	for(Object val:temps)
+            		values.add(val);
+            }else
+            	values.add(ent.getValue());
+		}
+		return values;
+	}
+    
+    private static String formatSQL(String sql) {
+		String temp=sql.substring(0, sql.indexOf("from"));
+		System.out.println(temp);
+		String cols[]=temp.split(",");
+		StringBuilder nsql=new StringBuilder();
+		Map<String, Object> map=new HashMap<>();
+		for(String col:cols) {
+			col=col.substring(0,col.indexOf("as"));
+			int ind=col.indexOf(".");
+			String formatCol=changCol(col.substring(ind+1)).trim();
+			if(!map.containsKey(formatCol)) {
+				map.put(formatCol, null);
+				nsql
+				.append(col)
+				.append(" as ")
+				.append(formatCol)
+				.append(",");
+			}
+		}
+		String select=nsql.toString().substring(0, nsql.toString().length()-1);
+		String from=" "+sql.substring(sql.indexOf("from"));
+		
+		return select + from;
+	}
+	private static String changCol(String col) {
+		if(col==null) return null;
+		StringBuilder sb=new StringBuilder();
+		String temp;
+		if(col.indexOf("_")==-1) {
+			return col;
+		}else {
+			String strs[]=col.split("_");
+			for(int i=0;i<strs.length;i++) {
+				if(i==0) {
+					sb.append(strs[i]);
+				}else {
+					temp=strs[i];
+					sb.append(temp.substring(0, 1).toUpperCase())
+					.append(temp.substring(1));
+				}
+			}
+		}
+		return sb.toString();
+	}
 }

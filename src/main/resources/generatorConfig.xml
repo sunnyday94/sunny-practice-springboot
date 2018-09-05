@@ -13,13 +13,13 @@
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://39.108.239.226:3306/sunny_springboot?serverTimezone=Asia/Shanghai&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false"
                         userId="root"
-                        password="uAiqwVwjJ8-i">
+                        password="root">
         </jdbcConnection>
 
 
         <!-- targetProject:生成po类的位置 -->
         <javaModelGenerator targetPackage="com.sunny.practice.entity.po"
-                            targetProject="E:\IDEAWorkSpace\sunny-practice-springboot\src\main\java">
+                            targetProject="E:\Projects\sunny-practice-springboot\src\main\java">
             <!--从数据库返回的值被清理前后的空格
             <property name="trimStrings" value="true" /> -->
         </javaModelGenerator>
@@ -28,18 +28,18 @@
 
         <!-- targetProject:mapper映射文件生成的位置 -->
         <sqlMapGenerator targetPackage="mybatis\mapper"
-                         targetProject="E:\IDEAWorkSpace\sunny-practice-springboot\src\main\resources">
+                         targetProject="E:\Projects\sunny-practice-springboot\src\main\resources">
         </sqlMapGenerator>
 
         <!-- targetPackage：mapper接口生成的位置 -->
         <javaClientGenerator type="XMLMAPPER"
                              targetPackage="com.sunny.practice.dao.mybatis.mapper"
-                             targetProject="E:\IDEAWorkSpace\sunny-practice-springboot\src\main\java">
+                             targetProject="E:\Projects\sunny-practice-springboot\src\main\java">
         </javaClientGenerator>
 
         <!-- 数据库表和对应实体类 -->
 
-        <table tableName="s_tb_user" domainObjectName="TbUser"
+        <table tableName="s_tb_user" domainObjectName="STBUser"
                enableCountByExample="false"  enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false"/>
     </context>

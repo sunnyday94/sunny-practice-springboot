@@ -8,6 +8,7 @@
  */
 package com.sunny.practice.service.impl;
 
+import com.sunny.practice.dao.mybatis.mapper.STBUserMapper;
 import com.sunny.practice.service.ISTBUserService;
 import com.sunny.practice.dao.jpa.page.PageInfo;
 import com.sunny.practice.entity.po.STBUser;
@@ -19,6 +20,8 @@ import com.sunny.practice.utils.exception.ResultCodeEnum;
 import com.sunny.practice.utils.exception.VPhotoException;
 import com.sunny.practice.utils.page.ReqPage;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +35,11 @@ import java.util.List;
 @Service("STBUserService")
 @Transactional
 public class STBUserService extends BaseService<STBUser> implements ISTBUserService {
+
+    @Resource
+    private STBUserMapper userMapper;
+
+
     @Override
     public Integer addUser(STBUserVo vo) {
         CheckUtils.checkNull(vo, "userName,userPassword,gender");

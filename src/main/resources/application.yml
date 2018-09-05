@@ -34,7 +34,7 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
       jdbc-url: jdbc:mysql://39.108.239.226:3306/sunny_springboot?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
-      password: uAiqwVwjJ8-i
+      password: root
       connection-test-query: select 1
       connection-timeout: 60000
       auto-commit: false
@@ -100,7 +100,7 @@ swagger2:
 
 hibernate:
   packages:
-    scan: ${mybatis-plus.typeAliasesPackage}
+    scan: com.sunny.practice.entity
   hbm2ddl:
     auto: none
 

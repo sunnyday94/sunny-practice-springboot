@@ -30,7 +30,7 @@ public class GeneratorSqlmap {
             // 覆盖已有的重名文件
             //boolean overwrite = true;
             // 准备 配置文件
-            File configFile = new File("E:\\IDEAWorkSpace\\sunny-practice-springboot\\src\\main\\resources\\generatorConfig.xml");
+            File configFile = new File("E:\\Projects\\sunny-practice-springboot\\src\\main\\resources\\generatorConfig.xml");
             // 1.创建 配置解析器
             ConfigurationParser parser = new ConfigurationParser(warnings);
             // 2.获取 配置信息

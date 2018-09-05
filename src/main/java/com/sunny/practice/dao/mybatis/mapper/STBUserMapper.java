@@ -1,6 +1,6 @@
 package com.sunny.practice.dao.mybatis.mapper;
 
-import com.sunny.practice.entity.vo.STBUser;
+import com.sunny.practice.entity.po.STBUser;
 
 public interface STBUserMapper extends  IBaseMapperDao<STBUser,Long>{
     /**

@@ -38,7 +38,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
 @EnableSwagger2
-//@MapperScan(basePackages={"com.sunny.practice.dao.mybatis.mapper"})  //扫描mapper文件
+@MapperScan(basePackages={"com.sunny.practice.dao.mybatis.mapper"})  //扫描mapper文件
 public class SunnyPracticeSpringbootApplication {
 
     public static void main(String[] args) {

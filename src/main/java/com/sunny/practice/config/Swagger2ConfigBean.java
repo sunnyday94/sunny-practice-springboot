@@ -22,21 +22,41 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * @Description: swagger2配置
- * @Author: sunny
- * @Date: 2018/8/24 17:42
+ * code is far away from bug with the animal protecting
+ * ┏┓　　　┏┓
+ * ┏┛┻━━━┛┻┓
+ * ┃　　　　　　　┃
+ * ┃　　　━　　　┃
+ * ┃　┳┛　┗┳　┃
+ * ┃　　　　　　　┃
+ * ┃　　　┻　　　┃
+ * ┃　　　　　　　┃
+ * ┗━┓　　　┏━┛
+ * 　　┃　　　┃神兽保佑
+ * 　　┃　　　┃代码无BUG！
+ * 　　┃　　　┗━━━┓
+ * 　　┃　　　　　　　┣┓
+ * 　　┃　　　　　　　┏┛
+ * 　　┗┓┓┏━┳┓┏┛
+ * 　　　┃┫┫　┃┫┫
+ * 　　　┗┻┛　┗┻┛
+ *
+ * @description Swagger2配置
+ * @author sunny
+ * @create 2018/9/5
+ * @since 1.0.0
  */
 @Slf4j
 @Configuration
-public class Swagger2Config {
-    public Swagger2Config() {
+public class Swagger2ConfigBean {
+    public Swagger2ConfigBean() {
         log.info("=================加载Swagger2Config================");
     }
 
-    @Value("${swagger.basePackage}")
+    @Value("${swagger2.basePackage}")
     private String basePackage;
 
-    @Value("${swagger.title}")
+    @Value("${swagger2.title}")
     private String title;
 
     @Bean

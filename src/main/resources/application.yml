@@ -3,16 +3,10 @@ server:
   servlet:
     context-path: /springboot
 
-hibernate:
-  packages:
-    scan: com.sunny.practice.entity
-  hbm2ddl:
-    auto: none
-
-
 spring:
   application:
     name: springboot
+
 # jpa
   jpa:
     database : MYSQL
@@ -40,7 +34,7 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
       jdbc-url: jdbc:mysql://39.108.239.226:3306/sunny_springboot?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
-      password: root
+      password: uAiqwVwjJ8-i
       connection-test-query: select 1
       connection-timeout: 60000
       auto-commit: false
@@ -52,7 +46,6 @@ spring:
         prep-stmt-cache-size: 250
         prep-stmt-cache-sql-limit: 2048
         use-server-prep-stmts: true
-
 
   #redis配置
   redis:
@@ -66,7 +59,50 @@ spring:
         min-idle: 0 # 连接池中的最小空闲连接
     timeout: 0 # 连接超时时间（毫秒）
 
+   #热重启
+  devtools:
+    restart:
+      enabled: true
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:/mybatis/mapper/**/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.sunny.practice.entity
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 0
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #数据库大写下划线转换
+    #capital-mode: true
+    #序列接口实现类配置
+    #key-generator: com.baomidou.springboot.xxx
+    #逻辑删除配置（下面3个配置）
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+    #自定义SQL注入器
+    #sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+    #自定义填充策略接口实现
+    #meta-object-handler: com.baomidou.springboot.xxx
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+
 #swagger2
-swagger:
+swagger2:
   basePackage: com.sunny.practice.controller
   title: springboot
+
+hibernate:
+  packages:
+    scan: ${mybatis-plus.typeAliasesPackage}
+  hbm2ddl:
+    auto: none
+
+logging:
+  path: ${user.home}/logs/${spring.application.name}/${server.port}

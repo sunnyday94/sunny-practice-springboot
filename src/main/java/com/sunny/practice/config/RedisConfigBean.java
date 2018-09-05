@@ -1,5 +1,5 @@
 /**
- * This class was created by Kimmyzhao. It's distributed as
+ * This class was created by sunny. It's distributed as
  * part of the device-api Mod.
  *
  * 版权所有(C) 上海纯米电子科技有限公司 2014-2023
@@ -29,9 +29,34 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+/**
+ * code is far away from bug with the animal protecting
+ * ┏┓　　　┏┓
+ * ┏┛┻━━━┛┻┓
+ * ┃　　　　　　　┃
+ * ┃　　　━　　　┃
+ * ┃　┳┛　┗┳　┃
+ * ┃　　　　　　　┃
+ * ┃　　　┻　　　┃
+ * ┃　　　　　　　┃
+ * ┗━┓　　　┏━┛
+ * 　　┃　　　┃神兽保佑
+ * 　　┃　　　┃代码无BUG！
+ * 　　┃　　　┗━━━┓
+ * 　　┃　　　　　　　┣┓
+ * 　　┃　　　　　　　┏┛
+ * 　　┗┓┓┏━┳┓┏┛
+ * 　　　┃┫┫　┃┫┫
+ * 　　　┗┻┛　┗┻┛
+ *
+ * @description Redis配置类
+ * @author sunny
+ * @create 2018/9/5
+ * @since 1.0.0
+ */
 @Configuration
 @EnableAutoConfiguration
-public class RedisConfig {
+public class RedisConfigBean {
 
 	/**
 	 * 注入 RedisConnectionFactory

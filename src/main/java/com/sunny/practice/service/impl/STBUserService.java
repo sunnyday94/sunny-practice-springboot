@@ -16,6 +16,7 @@ import com.sunny.practice.entity.vo.STBUserVo;
 import com.sunny.practice.utils.BaseUtils;
 import com.sunny.practice.utils.CheckUtils;
 import com.sunny.practice.utils.DateUtils;
+import com.sunny.practice.utils.MD5;
 import com.sunny.practice.utils.exception.ResultCodeEnum;
 import com.sunny.practice.utils.exception.VPhotoException;
 import com.sunny.practice.utils.page.ReqPage;
@@ -43,6 +44,8 @@ public class STBUserService extends BaseService<STBUser> implements ISTBUserServ
     @Override
     public Integer addUser(STBUserVo vo) {
         CheckUtils.checkNull(vo, "userName,userPassword,gender");
+        //密码进行md5加密
+        vo.setUserPassword(MD5.MD5Encryption(vo.getUserPassword()));
         //校验
         if(isExisted(vo))
             throw new VPhotoException(ResultCodeEnum.系统异常,vo.getUserName().concat("已存在!"));

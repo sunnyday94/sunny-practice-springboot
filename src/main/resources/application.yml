@@ -32,9 +32,9 @@ spring:
   datasource:
     hikari:
       driver-class-name: com.mysql.jdbc.Driver
-      jdbc-url: jdbc:mysql://10.3.129.91:3306/sunny_springboot?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+      jdbc-url: jdbc:mysql://39.108.239.226:3306/sunny_springboot?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
-      password: newpwd
+      password: root
       connection-test-query: select 1
       connection-timeout: 60000
       auto-commit: false

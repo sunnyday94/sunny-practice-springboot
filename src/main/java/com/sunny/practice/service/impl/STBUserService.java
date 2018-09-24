@@ -20,9 +20,9 @@ import com.sunny.practice.utils.exception.ResultCodeEnum;
 import com.sunny.practice.utils.exception.VPhotoException;
 import com.sunny.practice.utils.page.ReqPage;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +33,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @Service("STBUserService")
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class STBUserService extends BaseService<STBUser> implements ISTBUserService {
 
     @Resource

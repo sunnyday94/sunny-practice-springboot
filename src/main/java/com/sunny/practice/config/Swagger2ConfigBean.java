@@ -22,25 +22,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * code is far away from bug with the animal protecting
- * ┏┓　　　┏┓
- * ┏┛┻━━━┛┻┓
- * ┃　　　　　　　┃
- * ┃　　　━　　　┃
- * ┃　┳┛　┗┳　┃
- * ┃　　　　　　　┃
- * ┃　　　┻　　　┃
- * ┃　　　　　　　┃
- * ┗━┓　　　┏━┛
- * 　　┃　　　┃神兽保佑
- * 　　┃　　　┃代码无BUG！
- * 　　┃　　　┗━━━┓
- * 　　┃　　　　　　　┣┓
- * 　　┃　　　　　　　┏┛
- * 　　┗┓┓┏━┳┓┏┛
- * 　　　┃┫┫　┃┫┫
- * 　　　┗┻┛　┗┻┛
- *
  * @description Swagger2配置
  * @author sunny
  * @create 2018/9/5

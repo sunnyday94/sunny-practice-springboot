@@ -30,25 +30,6 @@ import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * code is far away from bug with the animal protecting
- * ┏┓　　　┏┓
- * ┏┛┻━━━┛┻┓
- * ┃　　　　　　　┃
- * ┃　　　━　　　┃
- * ┃　┳┛　┗┳　┃
- * ┃　　　　　　　┃
- * ┃　　　┻　　　┃
- * ┃　　　　　　　┃
- * ┗━┓　　　┏━┛
- * 　　┃　　　┃神兽保佑
- * 　　┃　　　┃代码无BUG！
- * 　　┃　　　┗━━━┓
- * 　　┃　　　　　　　┣┓
- * 　　┃　　　　　　　┏┛
- * 　　┗┓┓┏━┳┓┏┛
- * 　　　┃┫┫　┃┫┫
- * 　　　┗┻┛　┗┻┛
- *
  * @description Redis配置类
  * @author sunny
  * @create 2018/9/5

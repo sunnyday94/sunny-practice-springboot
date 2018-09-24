@@ -24,25 +24,6 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * code is far away from bug with the animal protecting
- * ┏┓　　　┏┓
- * ┏┛┻━━━┛┻┓
- * ┃　　　　　　　┃
- * ┃　　　━　　　┃
- * ┃　┳┛　┗┳　┃
- * ┃　　　　　　　┃
- * ┃　　　┻　　　┃
- * ┃　　　　　　　┃
- * ┗━┓　　　┏━┛
- * 　　┃　　　┃神兽保佑
- * 　　┃　　　┃代码无BUG！
- * 　　┃　　　┗━━━┓
- * 　　┃　　　　　　　┣┓
- * 　　┃　　　　　　　┏┛
- * 　　┗┓┓┏━┳┓┏┛
- * 　　　┃┫┫　┃┫┫
- * 　　　┗┻┛　┗┻┛
- *
  * @description Jpa配置类
  * @author sunny
  * @create 2018/9/5

@@ -8,11 +8,10 @@
  */
 package com.sunny.practice.service.impl;
 
-import com.sunny.practice.dao.mybatis.mapper.STBUserMapper;
-import com.sunny.practice.service.ISTBUserService;
 import com.sunny.practice.dao.jpa.page.PageInfo;
 import com.sunny.practice.entity.po.STBUser;
 import com.sunny.practice.entity.vo.STBUserVo;
+import com.sunny.practice.service.ISTBUserService;
 import com.sunny.practice.utils.BaseUtils;
 import com.sunny.practice.utils.CheckUtils;
 import com.sunny.practice.utils.DateUtils;
@@ -23,7 +22,6 @@ import com.sunny.practice.utils.page.ReqPage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +35,8 @@ import java.util.List;
 @Transactional(rollbackFor = Exception.class)
 public class STBUserService extends BaseService<STBUser> implements ISTBUserService {
 
-    @Resource
-    private STBUserMapper userMapper;
+//    @Resource
+//    private STBUserMapper userMapper;
 
 
     @Override
@@ -108,6 +106,12 @@ public class STBUserService extends BaseService<STBUser> implements ISTBUserServ
         vo.setDelTime(DateUtils.getNow());
         STBUser u = this.getEntity(STBUser.class, vo.getId());
         this.deleteEntity(u);
+        return 1;
+    }
+
+    @Override
+    public Integer deleteUserById(Long id) {
+        this.deleteEntity(STBUser.class, id);
         return 1;
     }
 

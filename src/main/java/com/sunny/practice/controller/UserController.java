@@ -22,10 +22,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
@@ -60,7 +58,7 @@ public class UserController extends BaseController {
      * @Date: 2018/8/24 16:17
      */
 
-    @PostMapping(value="/addUser",produces = {"application/json"})
+    @PostMapping(value="/users",produces = {"application/json"})
     @ApiOperation(value="新增用户",notes = "新增用户,参数为用户对象",response = ResBean.class)
     @ApiImplicitParams({
             @ApiImplicitParam(dataType="STBUserVo",name="vo",required=true,paramType="body")
@@ -94,7 +92,7 @@ public class UserController extends BaseController {
      * @Date: 2018/8/24 16:25
      */
 
-    @PostMapping(value="/updateUser",produces = {"application/json"})
+    @PutMapping(value="/users",produces = {"application/json"})
     @ApiOperation(value="更新用户信息",notes = "更新用户信息,vo中id必传",response = ResBean.class)
     @ApiImplicitParams(
             @ApiImplicitParam(name="vo",dataType = "STBUserVo",required = true,paramType = "body")
@@ -107,7 +105,7 @@ public class UserController extends BaseController {
 
 
     /**
-     * @Description: 删除用户
+     * @Description: 删除用户(逻辑删除)
      * @Author: sunny
      * @Date: 2018/8/24 16:26
      */
@@ -119,6 +117,23 @@ public class UserController extends BaseController {
     public ResBean deleteUser(@RequestBody  STBUserVo vo){
         if(BaseUtils.isNull(vo)) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");
         userService.deleteUser(vo);
+        return this.getResBean("删除用户成功!");
+    }
+
+
+    /**
+      * @Description: 删除用户(物理删除)
+      * @Author: sunny
+      * @Date: 0:01 2018/11/8
+      */
+    @DeleteMapping(value="/deleteUserById/{id}",produces = {"application/json"})
+    @ApiOperation(value="根据用户id删除用户",notes = "根据用户id删除用户",response = ResBean.class)
+    @ApiImplicitParams(
+            @ApiImplicitParam(name="id",dataType = "Long",required = true,paramType = "path")
+    )
+    public ResBean deleteUserById(@PathVariable(value = "id")  Long id){
+        if(BaseUtils.isNull(id)) throw new VPhotoException(ResultCodeEnum.参数异常, "请求参数不能为空!");
+        userService.deleteUserById(id);
         return this.getResBean("删除用户成功!");
     }
 }

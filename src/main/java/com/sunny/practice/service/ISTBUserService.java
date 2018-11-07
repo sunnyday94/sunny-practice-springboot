@@ -28,4 +28,6 @@ public interface ISTBUserService extends IBaseService<STBUser> {
     Integer updateUser(STBUserVo vo);
 
     Integer deleteUser(STBUserVo vo);
+
+    Integer deleteUserById(Long id);
 }

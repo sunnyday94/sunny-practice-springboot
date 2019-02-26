@@ -10,7 +10,6 @@ package com.sunny.practice.controller.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.sunny.practice.dao.jpa.page.PageInfo;
 import com.sunny.practice.utils.BaseUtils;
 import com.sunny.practice.utils.ResBean;
 import com.sunny.practice.utils.exception.ResultCodeEnum;
@@ -52,7 +51,7 @@ public class BaseController {
      * @param pageInfo
      * @return
      */
-    public ResBean getResBean(PageInfo pageInfo) {
+    public ResBean getResBean(ResBean.PageInfo pageInfo) {
         ResBean.PageInfo page=new ResBean().istansPageInfo();
         BaseUtils.copyBeanNullInvalid(pageInfo, page);
         return ResBean.builder(ResultCodeEnum.成功.flag, ResultCodeEnum.成功.defaultMsg,  page);
@@ -89,7 +88,7 @@ public class BaseController {
      * @param pageInfo
      * @return
      */
-    public ResBean getResBean(ResultCodeEnum code, String msg, PageInfo pageInfo) {
+    public ResBean getResBean(ResultCodeEnum code, String msg, ResBean.PageInfo pageInfo) {
         return ResBean.builder(code.flag, msg, pageInfo);
     }
 

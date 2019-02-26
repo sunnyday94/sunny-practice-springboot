@@ -8,7 +8,10 @@
  */
 package com.sunny.practice.utils.page;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -18,25 +21,27 @@ import java.io.Serializable;
  * @create 2018/8/24
  * @since 1.0.0
  */
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReqPage<T extends Serializable> implements  Serializable {
 
 
     private static final long serialVersionUID = 4958562099571256217L;
 
+    /**
+     * 当前页
+     */
     private Integer pageIndex;
 
+    /**
+     * 每页条目数
+     */
     private Integer pageSize;
 
+    /**
+     * 参数对象
+     */
     private T obj;
-
-
-    public ReqPage() {
-    }
-
-    public ReqPage(Integer pageIndex, Integer pageSize, T obj) {
-        this.pageIndex = pageIndex;
-        this.pageSize = pageSize;
-        this.obj = obj;
-    }
 }

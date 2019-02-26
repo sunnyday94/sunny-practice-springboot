@@ -5,9 +5,9 @@ server:
 
 spring:
   application:
-    name: springboot
+    name: sunny-practice-springboot
 
-# jpa
+# JPA
   jpa:
     database : MYSQL
     properties:
@@ -64,7 +64,7 @@ spring:
     restart:
       enabled: true
 
-#mybatis
+# mybatis配置
 mybatis-plus:
   mapper-locations: classpath*:/mybatis/mapper/**/*.xml
   #实体扫描，多个package用逗号或者分号分隔
@@ -93,7 +93,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
 
-#swagger2
+#swagger配置
 swagger2:
   basePackage: com.sunny.practice.controller
   title: springboot
@@ -104,5 +104,6 @@ hibernate:
   hbm2ddl:
     auto: none
 
+# 日志路径
 logging:
   path: ${user.home}/logs/${spring.application.name}/${server.port}

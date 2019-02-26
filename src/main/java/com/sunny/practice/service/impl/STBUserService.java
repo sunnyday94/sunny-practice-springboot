@@ -8,14 +8,10 @@
  */
 package com.sunny.practice.service.impl;
 
-import com.sunny.practice.dao.jpa.page.PageInfo;
 import com.sunny.practice.entity.po.STBUser;
 import com.sunny.practice.entity.vo.STBUserVo;
 import com.sunny.practice.service.ISTBUserService;
-import com.sunny.practice.utils.BaseUtils;
-import com.sunny.practice.utils.CheckUtils;
-import com.sunny.practice.utils.DateUtils;
-import com.sunny.practice.utils.MD5;
+import com.sunny.practice.utils.*;
 import com.sunny.practice.utils.exception.ResultCodeEnum;
 import com.sunny.practice.utils.exception.VPhotoException;
 import com.sunny.practice.utils.page.ReqPage;
@@ -23,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description
@@ -57,32 +55,32 @@ public class STBUserService extends BaseService<STBUser> implements ISTBUserServ
     }
 
     @Override
-    public PageInfo getUserList(ReqPage<STBUserVo> page) {
+    public ResBean.PageInfo<STBUserVo> getUserList(ReqPage<STBUserVo> page) {
         CheckUtils.checkNull(page,"obj");
         STBUserVo vo = page.getObj();
-        StringBuilder hql = new StringBuilder(" from STBUser u where u.delFlag =?");
-        List<Object> params = new ArrayList<>();
+        StringBuilder hql = new StringBuilder(" from STBUser u where u.delFlag =:delFlag");
+        Map<String,Object> paras = new HashMap<>();
         if(vo.getDelFlag()==null)
             vo.setDelFlag("0");
-        params.add(vo.getDelFlag());
+        paras.put("delFlag", vo.getDelFlag());
         if(vo.getId()!=null){
-            hql.append(" and u.id = ?");
-            params.add(vo.getId());
+            hql.append(" and u.id = :id");
+            paras.put("id", vo.getId());
         }
         if(vo.getUserName()!=null && !vo.getUserName().equals("")){
-            hql.append(" and u.userName like ?");
-            params.add("%"+vo.getUserName()+"%");
+            hql.append(" and u.userName like :userName");
+            paras.put("userName", "%"+vo.getUserName()+"%");
         }
         if(vo.getGender()!=null && !vo.getGender().equals("")){
-            hql.append(" and u.gender = ?");
-            params.add(vo.getGender());
+            hql.append(" and u.gender = :gender");
+            paras.put("gender", vo.getGender());
         }
         if(vo.getTelPhone()!=null && !vo.getTelPhone().equals("")){
-            hql.append(" and u.telPhone = ?");
-            params.add(vo.getTelPhone());
+            hql.append(" and u.telPhone = :telPhone");
+            paras.put("telPhone", vo.getTelPhone());
         }
-        PageInfo pageInfo = this.getPages(page.getPageIndex(), page.getPageSize(),
-                hql.toString(),params.toArray());
+        ResBean.PageInfo<STBUserVo> pageInfo = this.getPages(STBUserVo.class, page.getPageIndex(),
+                page.getPageSize(),hql.toString() ,paras );
         return pageInfo;
     }
 

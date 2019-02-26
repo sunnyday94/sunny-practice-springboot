@@ -18,6 +18,7 @@ package com.sunny.practice.service.impl;
 import com.sunny.practice.dao.jpa.IBasicDao;
 import com.sunny.practice.service.IBaseService;
 import com.sunny.practice.utils.ResBean;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
@@ -38,12 +39,10 @@ import java.util.Map;
  *
  */
 @Service
+@Slf4j
 public class BaseService<E extends Serializable> // extends DaoImpl<E>
 	implements IBaseService<E> {
 
-
-
-	public static Log log = LogFactory.getLog(BaseService.class);
 	@Resource(name="dao")
 	protected IBasicDao<E> dao;
 
@@ -60,7 +59,7 @@ public class BaseService<E extends Serializable> // extends DaoImpl<E>
 	public Connection getConnection() {
 		try {
 			DataSource dataSource=SessionFactoryUtils.getDataSource(dao.getSession().getSessionFactory());
-			return (dataSource==null)?null:dataSource.getConnection();
+			return dataSource==null ? null : dataSource.getConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -8,6 +8,7 @@
  */
 package com.sunny.practice.service.impl;
 
+import com.sunny.practice.dao.mybatis.mapper.STBUserMapper;
 import com.sunny.practice.entity.po.STBUser;
 import com.sunny.practice.entity.vo.STBUserVo;
 import com.sunny.practice.service.ISTBUserService;
@@ -15,9 +16,12 @@ import com.sunny.practice.utils.*;
 import com.sunny.practice.utils.exception.ResultCodeEnum;
 import com.sunny.practice.utils.exception.VPhotoException;
 import com.sunny.practice.utils.page.ReqPage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +35,20 @@ import java.util.Map;
  */
 @Service("STBUserService")
 @Transactional(rollbackFor = Exception.class)
+@Slf4j
 public class STBUserService extends BaseService<STBUser> implements ISTBUserService {
 
-//    @Resource
-//    private STBUserMapper userMapper;
+    @Resource
+    private STBUserMapper userMapper;
+
+    public STBUserService(){
+        log.error("==========STBUserService构造方法,此时userMapper还没有被注入==========,userMapper:"+userMapper);
+    }
+
+    @PostConstruct
+    public void init(){
+        log.error("@PostConstruct将在依赖注入完成后被自动调用,userMapper:"+userMapper);
+    }
 
 
     @Override

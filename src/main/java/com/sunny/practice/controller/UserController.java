@@ -40,15 +40,6 @@ public class UserController extends BaseController {
     private ISTBUserService userService;
 
 
-    public UserController() {
-        log.info("================加载UserController构造方法==============");
-    }
-
-
-    public @PostConstruct void init(){
-        log.info("============加载init方法===============");
-    }
-
     /**
      * @Description: 新增用户
      * @Author: sunny

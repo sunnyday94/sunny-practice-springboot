@@ -32,10 +32,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 public class Swagger2ConfigBean {
 
-    @Value("${swagger2.basePackage}")
+    @Value("${swagger2.basePackage:com.sunny.practice.controller}")
     private String basePackage;
 
-    @Value("${swagger2.title}")
+    @Value("${swagger2.title:springboot}")
     private String title;
 
     @Bean

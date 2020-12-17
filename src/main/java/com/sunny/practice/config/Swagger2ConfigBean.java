@@ -29,7 +29,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @since 1.0.0
  */
 @Slf4j
-@Configuration
 public class Swagger2ConfigBean {
 
     @Value("${swagger2.basePackage:com.sunny.practice.controller}")
@@ -52,7 +51,7 @@ public class Swagger2ConfigBean {
         return new ApiInfoBuilder()
                 .title(title)
                 .description("sunny-practice-springboot")
-                .contact(new Contact("sunny", "", "1948904329@qq.com"))
+                .contact(new Contact("sunny", "", "sunnyday940908@163.com"))
                 .version("1.0")
                 .build();
     }

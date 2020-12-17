@@ -1,5 +1,6 @@
 package com.sunny.practice;
 
+import com.sunny.practice.annotation.EnableSwagger;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +9,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 /**
@@ -20,7 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         exclude = {DataSourceAutoConfiguration.class})
 @EnableAspectJAutoProxy
 @EnableTransactionManagement
-@EnableSwagger2
+@EnableSwagger
 @MapperScan(basePackages={"com.sunny.practice.dao.mybatis.mapper"})  //扫描mapper文件
 public class SunnyPracticeSpringbootApplication extends SpringBootServletInitializer {
 

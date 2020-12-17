@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -28,16 +29,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @since 1.0.0
  */
 @Slf4j
-@Configuration
 public class Swagger2ConfigBean {
-    public Swagger2ConfigBean() {
-        log.info("=================加载Swagger2Config================");
-    }
 
-    @Value("${swagger2.basePackage}")
+    @Value("${swagger2.basePackage:com.sunny.practice.controller}")
     private String basePackage;
 
-    @Value("${swagger2.title}")
+    @Value("${swagger2.title:springboot}")
     private String title;
 
     @Bean
@@ -54,7 +51,7 @@ public class Swagger2ConfigBean {
         return new ApiInfoBuilder()
                 .title(title)
                 .description("sunny-practice-springboot")
-                .contact(new Contact("sunny", "", "1948904329@qq.com"))
+                .contact(new Contact("sunny", "", "sunnyday940908@163.com"))
                 .version("1.0")
                 .build();
     }

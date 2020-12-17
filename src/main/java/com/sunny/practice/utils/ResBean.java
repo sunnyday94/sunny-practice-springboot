@@ -9,7 +9,12 @@
 package com.sunny.practice.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,6 +52,7 @@ public class ResBean {
     private PageInfo pageInfo = null;
 
     public ResBean() {
+
     }
 
     private ResBean(Integer code, String msg) {
@@ -139,33 +145,23 @@ public class ResBean {
         return new PageInfo();
     }
 
-    public class PageInfo {
-
+    /**
+     * 静态内部类
+     * @param <T>
+     */
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class PageInfo<T> {
         /**
-         * 分页List
+         * 分页list
          */
-        private List<?> list;
+        private List<T> list = Collections.emptyList();
 
         /**
-         * 记录总数
+         * 总条目数
          */
         private int total;
-
-        public List<?> getList() {
-            return list;
-        }
-
-        public void setList(List<?> list) {
-            this.list = list;
-        }
-
-        public int getTotal() {
-            return total;
-        }
-
-        public void setTotal(int total) {
-            this.total = total;
-        }
     }
-
 }

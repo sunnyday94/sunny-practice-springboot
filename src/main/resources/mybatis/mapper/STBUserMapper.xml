@@ -133,6 +133,9 @@
         #{remark,jdbcType=VARCHAR},
       </if>
     </trim>
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID() id
+    </selectKey>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.sunny.practice.entity.po.STBUser">
     <!--

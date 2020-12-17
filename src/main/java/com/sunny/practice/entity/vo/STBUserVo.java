@@ -8,10 +8,11 @@
  */
 package com.sunny.practice.entity.vo;
 
-import lombok.Data;
-
-import java.io.Serializable;
-import java.util.Date;
+import com.sunny.practice.entity.BaseVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @description
@@ -19,27 +20,28 @@ import java.util.Date;
  * @create 2018/8/24
  * @since 1.0.0
  */
-@Data
-public class STBUserVo implements Serializable {
+@ApiModel(description = "用户vo")
+@Getter
+@Setter
+public class STBUserVo extends BaseVO {
 
     private static final long serialVersionUID = 7478963597281334819L;
-    private Long id ;  //主键id
 
-    private String userName ; //用户名称
+    @ApiModelProperty(value = "主键id")
+    private Long id ;
 
-    private String userPassword ; //用户密码
+    @ApiModelProperty(value = "用户名称")
+    private String userName ;
 
-    private String gender ; //性别
+    @ApiModelProperty(value="用户密码")
+    private String userPassword ;
 
-    private String telPhone; //电话号码
+    @ApiModelProperty(value="性别")
+    private String gender ;
 
-    private String delFlag;  //删除标志
+    @ApiModelProperty(value="电话号码")
+    private String telPhone;
 
-    private Date createTime;  //创建时间
-
-    private Date updateTime; //更新时间
-
-    private Date delTime; //删除时间
-
-    private String remark;  //备注信息
+    @ApiModelProperty(value="删除标志")
+    private String delFlag;
 }

@@ -97,6 +97,7 @@ mybatis-plus:
 swagger2:
   basePackage: com.sunny.practice.controller
   title: springboot
+  enable: true
 
 hibernate:
   packages:
@@ -104,6 +105,12 @@ hibernate:
   hbm2ddl:
     auto: none
 
-# 日志路径
+# 日志
 logging:
-  path: ${user.home}/logs/${spring.application.name}/${server.port}
+  path: ./logs
+  level:
+    org:
+      spring: info
+      mybatis: info
+    com:
+      sunny: debug

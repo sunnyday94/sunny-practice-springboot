@@ -176,7 +176,7 @@ public class BaseUtils {
     public static int string2int(String str, int defaultValue) {
         if (isNotNull(str)) {
             try {
-                return Integer.valueOf(str).intValue();
+                return Integer.parseInt(str);
             } catch (Exception ex) {
                 return defaultValue;
             }
@@ -235,7 +235,7 @@ public class BaseUtils {
     public static double string2double(String str, double defaultValue) {
         if (isNotNull(str)) {
             try {
-                return Double.valueOf(str).doubleValue();
+                return Double.parseDouble(str);
             } catch (Exception ex) {
                 return defaultValue;
             }
@@ -347,7 +347,7 @@ public class BaseUtils {
      * @return String
      */
     public static <T> String obj2string(T t) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
             if (t == null)
                 return sb.toString();
@@ -356,13 +356,11 @@ public class BaseUtils {
             String fieldName;
             for (Method m : ms) {
                 fieldName = m.getName();
-                if (fieldName.indexOf("get") >= 0) {
+                if (fieldName.contains("get")) {
                     fieldName = fieldName.substring(fieldName.indexOf("get") + 3, fieldName.length());
                     value = m.invoke(t);
                     if (value instanceof Date) {
                         value = DateUtils.toString(((Date) value), "yyyy-MM-dd HH:mm:ss");// 转换成date
-                    } else if (value instanceof Timestamp) {
-                        value = DateUtils.toString(new Date(((Timestamp) value).getTime()), "yyyy-MM-dd HH:mm:ss");// 转换成date
                     }
                     sb.append(fieldName).append("=").append(value).append(";");
                 }
@@ -457,7 +455,8 @@ public class BaseUtils {
     @SuppressWarnings("unchecked")
     public static void copyBean(Object s, String sps, Object t, String tps) {
         if (s == null || BaseUtils.isNull(sps) || t == null || BaseUtils.isNull(tps)) return;
-        String spsb[] = sps.split(","), tpsb[] = tps.split(",");
+        String[] spsb = sps.split(",");
+        String[] tpsb = tps.split(",");
         if (spsb.length != tpsb.length) return;
         if (s instanceof Map && t instanceof Map) {
             copyMap2Map((Map<String, Object>) s, sps, (Map<String, Object>) t, tps);
@@ -480,7 +479,8 @@ public class BaseUtils {
      */
     private static void copyBean2Map(Object s, String sps, Map<String, Object> t, String tps) {
         if (s == null || BaseUtils.isNull(sps) || t == null || BaseUtils.isNull(tps)) return;
-        String spsb[] = sps.split(","), tpsb[] = tps.split(",");
+        String[] spsb = sps.split(",");
+        String[] tpsb = tps.split(",");
         if (spsb.length != tpsb.length) return;
         Method readMethod = null;
         PropertyDescriptor spd = null;
@@ -512,7 +512,8 @@ public class BaseUtils {
      */
     private static void copyMap2Bean(Map<String, Object> s, String sps, Object t, String tps) {
         if (s == null || BaseUtils.isNull(sps) || t == null || BaseUtils.isNull(tps)) return;
-        String spsb[] = sps.split(","), tpsb[] = tps.split(",");
+        String[] spsb = sps.split(",");
+        String[] tpsb = tps.split(",");
         if (spsb.length != tpsb.length) return;
         Method writeMethod = null;
         PropertyDescriptor tpd = null;
@@ -547,7 +548,8 @@ public class BaseUtils {
      */
     private static void copyBean2Bean(Object s, String sps, Object t, String tps) {
         if (s == null || BaseUtils.isNull(sps) || t == null || BaseUtils.isNull(tps)) return;
-        String spsb[] = sps.split(","), tpsb[] = tps.split(",");
+        String[] spsb = sps.split(",");
+        String[] tpsb = tps.split(",");
         if (spsb.length != tpsb.length) return;
         Method writeMethod = null, readMethod = null;
         PropertyDescriptor spd = null, tpd = null;
@@ -586,7 +588,8 @@ public class BaseUtils {
      */
     private static void copyMap2Map(Map<String, Object> s, String sps, Map<String, Object> t, String tps) {
         if (s == null || BaseUtils.isNull(sps) || t == null || BaseUtils.isNull(tps)) return;
-        String spsb[] = sps.split(","), tpsb[] = tps.split(",");
+        String[] spsb = sps.split(",");
+        String[] tpsb = tps.split(",");
         if (spsb.length != tpsb.length) return;
         Object value = null;
         int len = spsb.length;

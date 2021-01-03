@@ -1,137 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration debug="false">
+<!-- 日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL，如果设置为WARN，则低于WARN的信息都不会输出 -->
+<!-- scan:当此属性设置为true时，配置文档如果发生改变，将会被重新加载，默认值为true -->
+<!-- scanPeriod:设置监测配置文档是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。
+                 当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration  scan="false" scanPeriod="10 seconds" debug="false">
+    <contextName>logback</contextName>
 
-    <jmxConfigurator/>
+    <property name="log.path" value="./logs" />
+    <springProperty name="log.path"  source="logging.path" defaultValue="./logs" />
 
-    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
-
-    <property name="LOG_PATH" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}"/>
-
-    <!-- 系统日志 -->
-    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-        <Target>System.out</Target>
-        <encoder charset="UTF-8">
-            <pattern>%d %contextName [%t] %-5level %logger{36} - %msg %n
-            </pattern>
-        </encoder>
+    <!--1. 输出到控制台-->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
+            <level>debug</level>
         </filter>
-    </appender>
-
-    <appender name="sys_debug" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_PATH}/debug.log</file>
-        <append>true</append>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [%-5level] [%logger.%M:%L] |%msg%n
-            </pattern>
-            <charset>utf-8</charset>
+        <encoder>
+            <pattern> %-25X{reqid} | %d{HH:mm:ss.SSS} | %-5level | %logger{26} |>>> %msg%n</pattern>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-            <OnMismatch>DENY</OnMismatch>
-            <OnMatch>ACCEPT</OnMatch>
-        </filter>
     </appender>
 
 
-    <appender name="sys_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/info.log</file>
+    <!--2. 日志记录器，日期滚动记录 [不同级别日志分开打] -->
+    <!--info日志 -->
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+        如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天的日志改名为今天的日期。
+        即，<File> 的日志都是当天的。 -->
+        <file>${log.path}/info/sunny-out-info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- rollover daily -->
-            <fileNamePattern>${LOG_PATH}/${LOG_FILE}-%d{yyyy-MM-dd}.%i.log
-            </fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches 100MB -->
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <fileNamePattern>${log.path}/info/sunny-out-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
+            <!--只保留最近一周的日志-->
+            <maxHistory>7</maxHistory>
         </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50}:%line - %msg%n</pattern>
+        <!-- 追加方式记录日志 -->
+        <append>true</append>
+        <!-- 日志文件的格式-->
+        <encoder>
+            <pattern>%-25X{reqid} | %d{yyyy-MM-dd HH:mm:ss.SSS} | %level | %thread | %logger |>>> %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
-    </appender>
-    <appender name="async_info" class="ch.qos.logback.classic.AsyncAppender">
-        <queueSize>4096</queueSize>
-        <appender-ref ref="sys_info"/>
-    </appender>
-
-    <appender name="sys_warn" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_PATH}/warn.log</file>
-        <append>true</append>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [%-5level] [%logger.%M:%L] |%msg%n
-            </pattern>
-            <charset>utf-8</charset>
-        </encoder>
+        <!-- 此日志文件只记录info级别的,匹配则接受,不匹配的拒绝 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>WARN</level>
-            <OnMismatch>DENY</OnMismatch>
-            <OnMatch>ACCEPT</OnMatch>
+            <level>info</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
 
-    <appender name="sys_error" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_PATH}/error.log</file>
+
+    <!--warning日志 -->
+    <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+        如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天的日志改名为今天的日期。
+        即，<File> 的日志都是当天的。 -->
+        <file>${log.path}/warn/sunny-out-warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <fileNamePattern>${log.path}/warn/sunny-out-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!--只保留最近一周的日志-->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <!-- 追加方式记录日志 -->
         <append>true</append>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [%-5level] [%logger.%M:%L] |%msg%n
-            </pattern>
-            <charset>utf-8</charset>
+        <!-- 日志文件的格式-->
+        <encoder>
+            <pattern>%-25X{reqid} | %d{yyyy-MM-dd HH:mm:ss.SSS} | %level | %thread | %logger |>>> %msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
+        <!-- 此日志文件只记录warn级别的,匹配则接受,不匹配的拒绝 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>ERROR</level>
-            <OnMismatch>DENY</OnMismatch>
-            <OnMatch>ACCEPT</OnMatch>
+            <level>warn</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
 
-    <appender name="stream-sql" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_PATH}/sql.log</file>
+
+    <!--error日志 -->
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则
+        如果同时有<File>和<FileNamePattern>，那么当天日志是<File>，明天会自动把今天的日志改名为今天的日期。
+        即，<File> 的日志都是当天的。 -->
+        <file>${log.path}/error/sunny-out-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间-->
+            <fileNamePattern>${log.path}/error/sunny-out-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!--只保留最近一周的日志-->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <!-- 追加方式记录日志 -->
         <append>true</append>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] [%-5level] [%logger.%M:%L] |%msg%n
-            </pattern>
-            <charset>utf-8</charset>
+        <!-- 日志文件的格式-->
+        <encoder>
+            <pattern>%-25X{reqid} | %d{yyyy-MM-dd HH:mm:ss.SSS} | %level | %thread | %logger |>>> %msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
+        <!-- 此日志文件只记录error级别的,匹配则接受,不匹配的拒绝 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-            <OnMismatch>DENY</OnMismatch>
-            <OnMatch>ACCEPT</OnMatch>
+            <level>error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
     </appender>
 
-    <logger name="com.sunny.practice" level="INFO"/>
+    <!--local环境-->
+    <springProfile name="local">
+        <root level="debug">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
 
-    <logger name="one.sunny" level="INFO"/>
-    <logger name="com.sunny.practice.dao.mybatis.mapper" level="DEBUG">
-        <appender-ref ref="stream-sql"/>
-        <appender-ref ref="stdout"/>
-    </logger>
+    <!--dev,fat,fat2环境-->
+    <springProfile name="dev,fat,fat2">
+        <root level="info">
+            <appender-ref ref="CONSOLE" />
+            <appender-ref ref="FILE_INFO" />
+            <appender-ref ref="FILE_WARN" />
+            <appender-ref ref="FILE_ERROR" />
+        </root>
+    </springProfile>
 
-    <logger name="com.netflix" level="INFO"/>
-
-    <logger name="org.apache" level="ERROR"/>
-    <logger name="org.apache.commons" level="ERROR"/>
-
-    <logger name="com.zaxxer.hikari.pool" level="INFO"/>
-
-    <logger name="catalia" level="ERROR"/>
-
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="springfox.documentation" level="INFO"/>
-    <!-- <logger name="org.springframework.boot" level="DEBUG"/>
-    <logger name="org.springframework.cloud" level="DEBUG"/>w
-    <logger name="org.springframework.security" level="DEBUG"/>
-    <logger name="org.springframework.web.context" level="DEBUG"/> -->
-
-    <root level="DEBUG">
-        <appender-ref ref="stdout"/>
-        <appender-ref ref="sys_debug"/>
-        <appender-ref ref="async_info"/>
-        <appender-ref ref="sys_warn"/>
-        <appender-ref ref="sys_error"/>
-    </root>
+    <!--prod环境-->
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="FILE_INFO" />
+            <appender-ref ref="FILE_WARN" />
+            <appender-ref ref="FILE_ERROR" />
+        </root>
+    </springProfile>
 </configuration>

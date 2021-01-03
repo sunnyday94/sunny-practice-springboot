@@ -43,7 +43,7 @@ public class RedisConfigBean {
 	 * 注入 RedisConnectionFactory
 	 */
 	@Autowired
-	RedisConnectionFactory redisConnectionFactory;
+	private RedisConnectionFactory redisConnectionFactory;
 
 	/**
 	 * 实例化 RedisTemplate 对象

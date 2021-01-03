@@ -10,6 +10,7 @@ package com.sunny.practice.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @since 1.0.0
  */
 @Slf4j
+@ConditionalOnProperty(value="swagger2.enable",havingValue = "true")
 public class Swagger2ConfigBean {
 
     @Value("${swagger2.basePackage:com.sunny.practice.controller}")

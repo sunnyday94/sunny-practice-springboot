@@ -110,7 +110,7 @@ logging:
   path: ./logs
   level:
     org:
-      spring: info
-      mybatis: info
+      springframework: debug
+      mybatis: debug
     com:
       sunny: debug

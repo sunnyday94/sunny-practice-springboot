@@ -8,14 +8,10 @@ package com.sunny.practice.filter.iplimit;
 import com.alibaba.fastjson.JSON;
 import com.sunny.practice.utils.IPUtil;
 import com.sunny.practice.utils.ResBean;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -24,7 +20,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,9 +43,8 @@ public class IpLimitFilter implements Filter {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig){
         this.useWhiteList=Boolean.parseBoolean(filterConfig.getInitParameter("useWhiteList"));
         String intervalStr=filterConfig.getInitParameter("interval");
         String frequencyStr=filterConfig.getInitParameter("frequency");
@@ -77,17 +71,17 @@ public class IpLimitFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest=(HttpServletRequest)servletRequest;
         String ip= analysisIpAddress(httpServletRequest);
+        //内网IP或白名单放行
         if(IPUtil.isLanIp(ip) || this.useWhiteList && inWhiteList(ip)){
             filterChain.doFilter(servletRequest, servletResponse);
             return ;
         }
-
+        //黑名单列表拦截
         if(inBackList(ip)){
             responseLimitMsg((HttpServletResponse)servletRequest);
         }else{
             filterChain.doFilter(servletRequest, servletResponse);
         }
-
         //通过黑白名单校验后，进行频率限制
         int number = frequencyLimit(ip);
         int times = number / this.frequency;
@@ -141,11 +135,7 @@ public class IpLimitFilter implements Filter {
             }
             return total.intValue()-frequency;
         }else{
-            //这个版本的spring-data-redis，setIfAbsent只支持两个参数,不支持设置过期时间,高版本之后支持四个参数
-            //采用高版本后,写法可改进
-            if(!stringRedisTemplate.hasKey(limit_key)){
-                stringRedisTemplate.opsForValue().set(limit_key,"1",interval,TimeUnit.SECONDS);
-            }
+            stringRedisTemplate.opsForValue().set(limit_key,"1",interval,TimeUnit.SECONDS);
         }
         return 0;
     }
@@ -180,4 +170,5 @@ public class IpLimitFilter implements Filter {
         }
         return ip;
     }
+
 }

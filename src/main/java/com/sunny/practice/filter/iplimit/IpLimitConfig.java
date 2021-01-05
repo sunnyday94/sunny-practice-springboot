@@ -38,7 +38,7 @@ public class IpLimitConfig {
     private boolean useWhiteList=false;
 
     /**
-     * IP访问周期
+     * 指定的时间,访问周期
      * 单位为秒。
      */
     @Value("${filter.custom.iplimit.interval:10}")
